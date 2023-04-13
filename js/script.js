@@ -81,46 +81,18 @@ function renderImg() {
   let img2 = getRandomNumber();
   let img3 = getRandomNumber();
 
-  for (let i = 0; i < previousImgRound.length; i++) {
-    if (img1 === previousImgRound[i]) {
-      img1 = getRandomNumber();
-      i = 0;
-    }
-  }
-  for (let i = 0; i < previousImgRound.length; i++) {
-    if (img2 === previousImgRound[i]) {
-      img2 = getRandomNumber();
-      i = 0;
-    }
-  }
-  for (let i = 0; i < previousImgRound.length; i++) {
-    if (img3 === previousImgRound[i]) {
-      img3 = getRandomNumber();
-      i = 0;
-    }
-  }
-
-  while (img2 === img1) {
+  while (
+    img1 === img2 ||
+    img1 === img3 ||
+    img2 === img3 ||
+    previousImgRound.includes(img1) ||
+    previousImgRound.includes(img2) ||
+    previousImgRound.includes(img3)
+  ) {
+    img1 = getRandomNumber();
     img2 = getRandomNumber();
-    for (let i = 0; i < previousImgRound.length; i++) {
-      if (img2 === previousImgRound[i]) {
-        img2 = getRandomNumber();
-        i = 0;
-      }
-    }
-  }
-  while (img3 === img2 || img3 === img1) {
     img3 = getRandomNumber();
-    for (let i = 0; i < previousImgRound.length; i++) {
-      if (img3 === previousImgRound[i]) {
-        img3 = getRandomNumber();
-        i = 0;
-      }
-    }
   }
-  console.log(img1);
-  console.log(img2);
-  console.log(img3);
 
   previousImgRound = [img1, img2, img3];
   image1.src = productArray[img1].filePath;
