@@ -23,11 +23,13 @@ footer {
   margin: 0 auto;
 }
 .main-container {
-  height: 80vh;
-  margin: 2rem auto;
+  height: 85vh;
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-bottom: 3rem;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 2fr 1fr;
+  grid-template-rows: 1.5fr 1.5fr;
   gap: 5px 1%;
 }
 .resultat {
@@ -38,6 +40,7 @@ footer {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  max-height: 100%;
 }
 img {
   width: 30%;
@@ -50,7 +53,6 @@ img:hover {
   display: flex;
   flex-direction: column;
   align-content: center;
-  justify-content: center;
 }
 li {
   text-align: left;
@@ -65,4 +67,9 @@ tr {
   border-color: white;
   border-width: 2px;
   padding: 5px;
+}
+
+canvas {
+  margin-top: 20px;
+  max-height: 90%;
 }

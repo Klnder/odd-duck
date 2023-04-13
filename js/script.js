@@ -1,4 +1,5 @@
 "use strict";
+//dom selectors
 let imgContainer = document.querySelector(".image");
 let image1 = document.querySelector(".image img:first-child");
 let image2 = document.querySelector(".image img:nth-child(2)");
@@ -8,8 +9,12 @@ let resultView = document.querySelector(".resultat");
 let resultButton = document.getElementById("result-button");
 resultButton.style.visibility = "hidden";
 const table = document.getElementById("result-table");
+
+//variables
 const nbrRoundsMax = 25;
 let clickCount = 0;
+let previousImgRound = [-1, -1, -1];
+
 viewResultText.textContent = `You must click ${nbrRoundsMax - clickCount} times before being able to see the results`;
 
 let imgArray = [
@@ -71,16 +76,53 @@ function getRandomNumber() {
   return Math.floor(Math.random() * imgArray.length);
 }
 function renderImg() {
+  console.log(previousImgRound);
   let img1 = getRandomNumber();
   let img2 = getRandomNumber();
   let img3 = getRandomNumber();
 
+  for (let i = 0; i < previousImgRound.length; i++) {
+    if (img1 === previousImgRound[i]) {
+      img1 = getRandomNumber();
+      i = 0;
+    }
+  }
+  for (let i = 0; i < previousImgRound.length; i++) {
+    if (img2 === previousImgRound[i]) {
+      img2 = getRandomNumber();
+      i = 0;
+    }
+  }
+  for (let i = 0; i < previousImgRound.length; i++) {
+    if (img3 === previousImgRound[i]) {
+      img3 = getRandomNumber();
+      i = 0;
+    }
+  }
+
   while (img2 === img1) {
     img2 = getRandomNumber();
+    for (let i = 0; i < previousImgRound.length; i++) {
+      if (img2 === previousImgRound[i]) {
+        img2 = getRandomNumber();
+        i = 0;
+      }
+    }
   }
   while (img3 === img2 || img3 === img1) {
     img3 = getRandomNumber();
+    for (let i = 0; i < previousImgRound.length; i++) {
+      if (img3 === previousImgRound[i]) {
+        img3 = getRandomNumber();
+        i = 0;
+      }
+    }
   }
+  console.log(img1);
+  console.log(img2);
+  console.log(img3);
+
+  previousImgRound = [img1, img2, img3];
   image1.src = productArray[img1].filePath;
   image1.alt = productArray[img1].name;
   productArray[img1].view += 1;
@@ -112,6 +154,44 @@ function renderResults() {
   for (let i = 0; i < productArray.length; i++) {
     productArray[i].render();
   }
+
+  const chart = document.getElementById("myChart");
+
+  const nameArray = [];
+  const clickArray = [];
+  const viewArray = [];
+
+  for (let i = 0; i < productArray.length; i++) {
+    nameArray[i] = productArray[i].name;
+    clickArray[i] = productArray[i].click;
+    viewArray[i] = productArray[i].view;
+  }
+
+  new Chart(chart, {
+    type: "bar",
+    data: {
+      labels: nameArray,
+      datasets: [
+        {
+          label: "Nbre of View",
+          data: viewArray,
+          borderWidth: 1,
+        },
+        {
+          label: "Nbre of click",
+          data: clickArray,
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  });
 }
 
 function handleImgClick(event) {
