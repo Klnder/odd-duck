@@ -7,13 +7,17 @@ let image3 = document.querySelector(".image img:nth-child(3)");
 let viewResultText = document.querySelector(".view-result-text");
 let resultView = document.querySelector(".resultat");
 let resultButton = document.getElementById("result-button");
+let resetRound = document.getElementById("reset-round");
+let resetAll = document.getElementById("reset-all");
 resultButton.style.visibility = "hidden";
 const table = document.getElementById("result-table");
-
+const chart = document.getElementById("myChart");
 //variables
 const nbrRoundsMax = 25;
 let clickCount = 0;
+let viewResult = false;
 let previousImgRound = [-1, -1, -1];
+var myChart;
 
 viewResultText.textContent = `You must click ${nbrRoundsMax - clickCount} times before being able to see the results`;
 
@@ -150,11 +154,11 @@ function renderResults() {
 
   table.appendChild(line);
 
+  viewResult = true;
+
   for (let i = 0; i < productArray.length; i++) {
     productArray[i].render();
   }
-
-  const chart = document.getElementById("myChart");
 
   const nameArray = [];
   const clickArray = [];
@@ -166,7 +170,7 @@ function renderResults() {
     viewArray[i] = productArray[i].view;
   }
 
-  new Chart(chart, {
+  myChart = new Chart(chart, {
     type: "bar",
     data: {
       labels: nameArray,
@@ -220,6 +224,40 @@ function handleButtonClick(event) {
   renderResults();
   resultButton.removeEventListener("click", handleButtonClick);
 }
+function handleResetRoundClick() {
+  saveSettings();
+  if (clickCount === nbrRoundsMax) {
+    if (viewResult) {
+      table.innerHTML = "";
+      myChart.destroy();
+    }
+    image1.addEventListener("click", handleImgClick);
+    image2.addEventListener("click", handleImgClick);
+    image3.addEventListener("click", handleImgClick);
+    resultButton.removeEventListener("click", handleButtonClick);
+  }
+  clickCount = 0;
+  previousImgRound = [-1, -1, -1];
+  viewResultText.textContent = `You must click ${nbrRoundsMax - clickCount} times before being able to see the results`;
+}
+function handleResetAllClick() {
+  clickCount = 0;
+  previousImgRound = [-1, -1, -1];
+  productArray = [];
+  viewResult = false;
+  for (let i = 0; i < imgArray.length; i++) {
+    const tempProduct = new Product(imgArray[i].name, imgArray[i].filePath, imgArray[i].view, imgArray[i].click);
+    productArray.push(tempProduct);
+  }
+  setting.data = productArray;
+  saveSettings();
+  table.innerHTML = "";
+  myChart.destroy();
+  viewResultText.textContent = `You must click ${nbrRoundsMax - clickCount} times before being able to see the results`;
+  image1.addEventListener("click", handleImgClick);
+  image2.addEventListener("click", handleImgClick);
+  image3.addEventListener("click", handleImgClick);
+}
 
 pageLoad();
 renderImg();
@@ -227,3 +265,5 @@ renderImg();
 image1.addEventListener("click", handleImgClick);
 image2.addEventListener("click", handleImgClick);
 image3.addEventListener("click", handleImgClick);
+resetRound.addEventListener("click", handleResetRoundClick);
+resetAll.addEventListener("click", handleResetAllClick);
