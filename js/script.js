@@ -252,7 +252,7 @@ function handleResetAllClick() {
   setting.data = productArray;
   saveSettings();
   table.innerHTML = "";
-  myChart.destroy();
+  myChart?.destroy();
   viewResultText.textContent = `You must click ${nbrRoundsMax - clickCount} times before being able to see the results`;
   image1.addEventListener("click", handleImgClick);
   image2.addEventListener("click", handleImgClick);
