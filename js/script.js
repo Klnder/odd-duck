@@ -18,38 +18,69 @@ let previousImgRound = [-1, -1, -1];
 viewResultText.textContent = `You must click ${nbrRoundsMax - clickCount} times before being able to see the results`;
 
 let imgArray = [
-  { name: "bag", filePath: "./img/bag.jpg" },
-  { name: "banana", filePath: "./img/banana.jpg" },
-  { name: "bathroom", filePath: "./img/bathroom.jpg" },
-  { name: "boots", filePath: "./img/boots.jpg" },
-  { name: "breakfast", filePath: "./img/breakfast.jpg" },
-  { name: "bubblegum", filePath: "./img/bubblegum.jpg" },
-  { name: "chair", filePath: "./img/chair.jpg" },
-  { name: "cthulhu", filePath: "./img/cthulhu.jpg" },
-  { name: "dog-duck", filePath: "./img/dog-duck.jpg" },
-  { name: "dragon", filePath: "./img/dragon.jpg" },
-  { name: "pen", filePath: "./img/pen.jpg" },
-  { name: "pet-sweep", filePath: "./img/pet-sweep.jpg" },
-  { name: "scissors", filePath: "./img/scissors.jpg" },
-  { name: "shark", filePath: "./img/shark.jpg" },
-  { name: "sweep", filePath: "./img/sweep.jpg" },
-  { name: "tauntaun", filePath: "./img/tauntaun.jpg" },
-  { name: "unicorn", filePath: "./img/unicorn.jpg" },
-  { name: "water-can", filePath: "./img/water-can.jpg" },
-  { name: "wine-glass", filePath: "./img/wine-glass.jpg" },
+  { name: "bag", filePath: "./img/bag.jpg", view: 0, click: 0 },
+  { name: "banana", filePath: "./img/banana.jpg", view: 0, click: 0 },
+  { name: "bathroom", filePath: "./img/bathroom.jpg", view: 0, click: 0 },
+  { name: "boots", filePath: "./img/boots.jpg", view: 0, click: 0 },
+  { name: "breakfast", filePath: "./img/breakfast.jpg", view: 0, click: 0 },
+  { name: "bubblegum", filePath: "./img/bubblegum.jpg", view: 0, click: 0 },
+  { name: "chair", filePath: "./img/chair.jpg", view: 0, click: 0 },
+  { name: "cthulhu", filePath: "./img/cthulhu.jpg", view: 0, click: 0 },
+  { name: "dog-duck", filePath: "./img/dog-duck.jpg", view: 0, click: 0 },
+  { name: "dragon", filePath: "./img/dragon.jpg", view: 0, click: 0 },
+  { name: "pen", filePath: "./img/pen.jpg", view: 0, click: 0 },
+  { name: "pet-sweep", filePath: "./img/pet-sweep.jpg", view: 0, click: 0 },
+  { name: "scissors", filePath: "./img/scissors.jpg", view: 0, click: 0 },
+  { name: "shark", filePath: "./img/shark.jpg", view: 0, click: 0 },
+  { name: "sweep", filePath: "./img/sweep.jpg", view: 0, click: 0 },
+  { name: "tauntaun", filePath: "./img/tauntaun.jpg", view: 0, click: 0 },
+  { name: "unicorn", filePath: "./img/unicorn.jpg", view: 0, click: 0 },
+  { name: "water-can", filePath: "./img/water-can.jpg", view: 0, click: 0 },
+  { name: "wine-glass", filePath: "./img/wine-glass.jpg", view: 0, click: 0 },
 ];
 let productArray = [];
 
-for (let i = 0; i < imgArray.length; i++) {
-  const tempProduct = new Product(imgArray[i].name, imgArray[i].filePath);
-  productArray.push(tempProduct);
+let setting = {
+  data: productArray,
+};
+//End of variable
+
+//savings data
+function loadSettings() {
+  let getSettings = localStorage.getItem("settings");
+  if (getSettings) {
+    console.log(getSettings);
+    setting = JSON.parse(getSettings);
+    console.log(setting);
+    for (let i = 0; i < setting.data.length; i++) {
+      const tempProduct = new Product(setting.data[i].name, setting.data[i].filePath, setting.data[i].view, setting.data[i].click);
+      productArray.push(tempProduct);
+    }
+  }
+}
+function saveSettings() {
+  let stringify = JSON.stringify(setting);
+  localStorage.setItem("settings", stringify);
+  console.log(stringify);
+}
+function pageLoad() {
+  let savedSettings = localStorage.getItem("settings");
+  if (!savedSettings) {
+    for (let i = 0; i < imgArray.length; i++) {
+      const tempProduct = new Product(imgArray[i].name, imgArray[i].filePath, imgArray[i].view, imgArray[i].click);
+      productArray.push(tempProduct);
+    }
+    return;
+  }
+  loadSettings();
+  console.log("previous data load successfuly");
 }
 
-function Product(name, filePath) {
+function Product(name, filePath, view, click) {
   this.name = name;
   this.filePath = filePath;
-  this.view = 0;
-  this.click = 0;
+  this.view = view;
+  this.click = click;
 }
 Product.prototype.render = function () {
   let line = document.createElement("tr");
@@ -76,7 +107,6 @@ function getRandomNumber() {
   return Math.floor(Math.random() * imgArray.length);
 }
 function renderImg() {
-  console.log(previousImgRound);
   let img1 = getRandomNumber();
   let img2 = getRandomNumber();
   let img3 = getRandomNumber();
@@ -173,6 +203,8 @@ function handleImgClick(event) {
     if (imgClick === productArray[i].name) {
       productArray[i].click += 1;
       clickCount += 1;
+      saveSettings();
+      console.log("settings save successfully");
     }
   }
   if (clickCount === nbrRoundsMax) {
@@ -192,6 +224,7 @@ function handleButtonClick(event) {
   resultButton.removeEventListener("click", handleButtonClick);
 }
 
+pageLoad();
 renderImg();
 
 image1.addEventListener("click", handleImgClick);
