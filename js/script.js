@@ -49,19 +49,17 @@ let setting = {
 function loadSettings() {
   let getSettings = localStorage.getItem("settings");
   if (getSettings) {
-    console.log(getSettings);
     setting = JSON.parse(getSettings);
-    console.log(setting);
     for (let i = 0; i < setting.data.length; i++) {
       const tempProduct = new Product(setting.data[i].name, setting.data[i].filePath, setting.data[i].view, setting.data[i].click);
       productArray.push(tempProduct);
     }
+    setting.data = productArray;
   }
 }
 function saveSettings() {
   let stringify = JSON.stringify(setting);
   localStorage.setItem("settings", stringify);
-  console.log(stringify);
 }
 function pageLoad() {
   let savedSettings = localStorage.getItem("settings");
@@ -73,7 +71,6 @@ function pageLoad() {
     return;
   }
   loadSettings();
-  console.log("previous data load successfuly");
 }
 
 function Product(name, filePath, view, click) {
