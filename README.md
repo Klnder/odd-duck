@@ -9,4 +9,4 @@ Website using HTML, JS, CSS, to display random images, and show a chart using Ch
 
 ## website
 
-[website available at :](https://klnder.github.io/odd-duck/)
+website available :[here](https://klnder.github.io/odd-duck/)
